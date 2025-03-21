@@ -269,6 +269,10 @@
 		var parkOpen = "NOT";
 		var parkClose = "OPEN";
 			
+		function getToggleData(){
+			var input_toggle = document.getElementById("input_text_type").checked;
+			return input_toggle;
+		}
 		function getInputData(){
 			var input_text = document.getElementById("input_text_schedules").value;
 			var data_string = input_text.split('\n');
@@ -278,6 +282,10 @@
 			var input_text = document.getElementById("input_text_compare").value;
 			var data_string = input_text.split('\n');
 			return data_string;
+		}
+		function getCompareReasonData(){
+			var input_text = document.getElementById("compare_reason").value;
+			return input_text;
 		}
 		
 		function loadDataAPI(){
@@ -319,8 +327,17 @@
 			var team_members_data = getInputData();
 			var compare_data = getInputCompareData();
 			var last_location = "No Way Its Bob!";
+			var input_staffing_type = getToggleData();
 			var locations = [];
 			console.log(compare_data);
+			
+			
+			var compare_reason_data = getCompareReasonData();
+			
+			
+			var compare_location = new Location(compare_reason_data);
+			locations.push(compare_location);
+			console.log("Create Compare Location: " + compare_reason_data);
 				
 			for(let i=0;i<team_members_data.length;i++){
 				var temp_team_member_data = team_members_data[i].split('\t');
@@ -330,12 +347,29 @@
 					continue;
 				}
 				
-				var temp_location = temp_team_member_data[0];
-				var temp_position = temp_team_member_data[1];
-				var temp_seq = temp_team_member_data[2];
-				var temp_time = temp_team_member_data[3];
-				var temp_eid = temp_team_member_data[4].split(' - ')[0];
-				var temp_name = temp_team_member_data[4].split(' - ')[1];
+				
+				var temp_location;
+				var temp_position;
+				var temp_seq;
+				var temp_time;
+				var temp_eid;
+				var temp_name;
+				
+				if(!input_staffing_type){
+				temp_location = temp_team_member_data[0];
+				temp_position = temp_team_member_data[1];
+				temp_seq = temp_team_member_data[2];
+				temp_time = temp_team_member_data[3];
+				temp_eid = temp_team_member_data[4].split(' - ')[0];
+				temp_name = temp_team_member_data[4].split(' - ')[1];
+				}else{
+				temp_location = temp_team_member_data[2];
+				temp_position = temp_team_member_data[3];
+				temp_seq = 0;
+				temp_time = temp_team_member_data[4];
+				temp_eid = "------";
+				temp_name = temp_team_member_data[5];
+				}
 				var isCompared = false;
 				console.log(compare_data.length);
 				for(let k = 0; k<compare_data.length;k++)
@@ -351,13 +385,6 @@
 					continue;
 				}
 				
-				//If Location is one we havent seenbefore, create a new Location
-				if(!last_location.includes(temp_location)){
-					last_location = temp_location;
-					var new_location = new Location(last_location);
-					locations.push(new_location);
-					console.log("Create New Location: " + last_location);
-				}
 				
 				//Seperate and change time to military
 				temp_time = temp_time.replaceAll(':', '');
@@ -381,7 +408,7 @@
 				}
 				var new_team_member = new TeamMember(temp_name, temp_eid, temp_location, shiftTimes[0], shiftTimes[1]);
 				console.log(new_team_member);
-				locations[locations.length-1].team_members.push(new_team_member);
+				locations[0].team_members.push(new_team_member);
 			}
 			
 		
@@ -464,7 +491,7 @@
 					var name_div = document.createElement("div");
 					name_div.className = (temp_team_member.name.includes("(16-17)"))?"name_minor_div_css":"name_div_css";
 					//temp_team_member.name=temp_team_member.name.replace("(16-17)","");
-					text = document.createTextNode("\t" + temp_team_member.name);
+					text = document.createTextNode("\t" + temp_team_member.name + " | " + temp_team_member.location);
 					name_div.append(text);
 					team_member_div.append(name_div);
 					team_member_div.checked = false;
@@ -549,10 +576,17 @@
 			<h1>Paste Data Here:</h1>
 			<textarea id="input_text_schedules" class="input_text_css" style="width: 80%; min-height: 50%;"></textarea>
 			<section>
+				<div>
+					<label for="compare_reason">Reason: </label>
+					<input type="text" id="compare_reason">
+				</div>
+				<div>
+					<input type="checkbox" id="input_text_type"/>
+					<label for="input_text_type">Input Format</label>
+				</div>
 				<button onClick="tempFunct()">CREATE</button>
 				<button onClick="closePasteDataPopup()">CANCEL</button>
 			</section>
-			<textarea id="input_text_compare_reason" class="input_text_css" style="width: 80%; min-height: 10%;"></textarea>
 			<textarea id="input_text_compare" class="input_text_css" style="width: 80%; min-height: 50%;"></textarea>
 		</dialog>
 	</body>
