@@ -270,6 +270,10 @@
 		
 		var parkOpen = "NOT";
 		var parkClose = "OPEN";
+		function getToggleData(){
+			var input_toggle = document.getElementById("input_text_type").checked;
+			return input_toggle;
+		}
 			
 		function getInputData(){
 			var input_text = document.getElementById("input_text_schedules").value;
@@ -311,11 +315,17 @@
 					0000 - Ride name	30001 - Attendant	1	9:20AM-3:30	666666 - Devil, Satan
 					0000 - Ride name	30001 - Attendant	1	9:20AM-3:30	666666 - Devil, Satan
 			*/
+			/*
+					[1] Ride Name [2] position [3] time 
+			*/
 			var staffing_sheet = document.getElementById('staffing_sheet');
 			var template = document.querySelector('template');
 			var team_members_data = getInputData();
 			var last_location = "No Way Its Bob!";
+			var input_staffing_type = getToggleData();
 			var locations = [];
+					console.log("staffing_sheet");
+					console.log(input_staffing_type);
 				
 			for(let i=0;i<team_members_data.length;i++){
 				var temp_team_member_data = team_members_data[i].split('\t');
@@ -325,12 +335,28 @@
 					continue;
 				}
 				
-				var temp_location = temp_team_member_data[0];
-				var temp_position = temp_team_member_data[1];
-				var temp_seq = temp_team_member_data[2];
-				var temp_time = temp_team_member_data[3];
-				var temp_eid = temp_team_member_data[4].split(' - ')[0];
-				var temp_name = temp_team_member_data[4].split(' - ')[1];
+				var temp_location;
+				var temp_position;
+				var temp_seq;
+				var temp_time;
+				var temp_eid;
+				var temp_name;
+				
+				if(!input_staffing_type){
+				temp_location = temp_team_member_data[0];
+				temp_position = temp_team_member_data[1];
+				temp_seq = temp_team_member_data[2];
+				temp_time = temp_team_member_data[3];
+				temp_eid = temp_team_member_data[4].split(' - ')[0];
+				temp_name = temp_team_member_data[4].split(' - ')[1];
+				}else{
+				temp_location = temp_team_member_data[2];
+				temp_position = temp_team_member_data[3];
+				temp_seq = 0;
+				temp_time = temp_team_member_data[4];
+				temp_eid = "------";
+				temp_name = temp_team_member_data[5];
+				}
 				
 				//If Location is one we havent seenbefore, create a new Location
 				if(!last_location.includes(temp_location)){
@@ -508,8 +534,8 @@
 			popup_object.style.display  = "none";
 		}
 		
-		function testInput(e){
-			console.log(e);
+		function testInput(){
+			console.log("Toggle");
 		}
 			
 		function openPasteDataDialog(){
@@ -538,7 +564,6 @@
 			<h1>Hello World</h1>
 			<p>Things will go here</p>
 			
-		<input type="file" id="ctrl" onchange="testInput(e)"  webkitfileentry fileentry multiple/>
 		</main>
 		<footer id="footer">
 			Footer
@@ -548,6 +573,10 @@
 			<h1>Paste Data Here:</h1>
 			<textarea id="input_text_schedules" class="input_text_css" style="width: 80%; min-height: 50%;"></textarea>
 			<section>
+				<div>
+					<input type="checkbox" id="input_text_type"/>
+					<label for="input_text_type">Input Format</label>
+				</div>
 				<button onClick="tempFunct()">CREATE</button>
 				<button onClick="closePasteDataPopup()">CANCEL</button>
 			</section>
