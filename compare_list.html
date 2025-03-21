@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<style type="text/css">
+		* {margin: 0;}
+		@page { margin: 0;}
+		
+		@media print {
+			body {
+			  visibility: hidden;
+			}
+			#main {
+				-webkit-print-color-adjust: exact;
+				visibility: visible;
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 80%;
+				background-color: white;
+			}
+		}
+		body {
+			background-color: #ddd;
+			min-height: 100vh;
+			display:grid;
+			grid-template-columns: 20% 1fr;
+			grid-template-rows: auto 1fr auto;
+			grid-template-areas:
+			"navbar navbar"
+			"sidebar main"
+			"sidebar footer";
+		}
+		nav {
+			top:0;
+			position: sticky;
+			grid-area: navbar;
+			color: black;
+			padding: 1em;
+		}
+	  
+		nav {
+			background-color: #e3e8eb;
+		} 
+		nav a {
+			color: DodgerBlue;
+			text-align: center;
+			padding: 14px 16px;
+			text-decoration: none;
+		}
+		nav a:hover {
+			background-color: DodgerBlue;
+			color: white;
+		}
+		aside {
+			height: calc(100vh - 50.4px);
+			top: 50.4px;
+			position: sticky;
+			align-self: start;  
+			grid-area: sidebar;
+			display: flex;
+			justify-content: top;
+			align-items: center;
+			//flex-wrap: wrap;
+			flex-direction: column;
+			background-color: lightgrey;
+			overflow-y: scroll;
+		}
+		aside .button_sidebar {
+			background-color: darkgrey; 
+			border: none;
+			color: white;
+			padding: 15px 32px;
+			text-align: center;
+			text-decoration: none;
+			width: 100%;
+			font-size: 16px;
+		}
+		
+		aside .button_sidebar_select {
+			background-color: cornsilk;
+			border: none;
+			color: black;
+			padding: 15px 32px;
+			text-align: center;
+			text-decoration: none;
+			width: 100%;
+			font-size: 16px;
+		}
+	  
+		main {
+			grid-area: main;
+			background-color: grey;
+			
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+			width:100%;
+		}
+		footer {
+			grid-area: footer;
+			background-color: green;
+			color: white;
+			padding: 2em;
+		}
+		.location_div_css{
+			width:90%;
+			background-color: white;
+		}
+	  
+		.location_name_div_css{
+			text-align: center;
+			vertical-align: middle;
+			width: 100%;
+			color: white;
+			/*
+			border-style: solid ;
+			border-width: 2px;
+			border-color: black;
+			*/
+			background-color: grey;
+		}
+	  
+		.shift_in_header_div_css{
+			text-align: center;
+			vertical-align: middle;
+			color: white;
+			width:100%;
+			/*
+			border-style: solid ;
+			border-width: 2px;
+			border-color: grey;
+			*/
+			background-color: darkgrey;
+		}
+	  
+		.shift_groups_div_css{
+			width: 100%;
+			display: flex;
+			justify-content: center;
+			align-items: start;
+			flex-direction: column;
+			//flex-direction: column;
+			//padding: 0.1em;
+		}
+		
+		.shift_group_div_css{
+			color: white;
+			padding: 1% 1%;
+		}
+		
+		.team_member_div_css {
+			display: flex;
+			justify-content: start;
+			align-items: start;
+			width: 100%;
+			color: black;
+			font-weight: normal;
+			background-color: white;
+		}
+		.eid_div_css {
+			border-width: 2px;
+			border-color: black;
+			border-top-style: none;
+			border-right-style: none;
+			border-bottom-style: solid;
+			border-left-style: solid;
+			text-align: center;
+			vertical-align: middle;
+			width: 13.4%;
+		}
+		.name_div_css {
+			border-width: 2px;
+			border-color: black;
+			border-top-style: none;
+			border-right-style: solid;
+			border-bottom-style: solid;
+			border-left-style: solid;
+			font-weight: normal;
+			background-color: white;
+			width: 63.4%;
+		}
+		.name_lead_div_css {
+			border-width: 2px;
+			border-color: black;
+			border-top-style: none;
+			border-right-style: solid;
+			border-bottom-style: solid;
+			border-left-style: solid;
+			font-weight: bold;
+			background-color: white;
+			width: 63.4%;
+		}
+		.name_minor_div_css {
+			border-width: 2px;
+			border-color: black;
+			border-top-style: none;
+			border-right-style: solid;
+			border-bottom-style: solid;
+			border-left-style: solid;
+			font-weight: normal;
+			background-color: lightgrey;
+			width: 63.4%;
+		}
+		.name_minor_lead_div_css {
+			border-width: 2px;
+			border-color: black;
+			border-top-style: none;
+			border-right-style: solid;
+			border-bottom-style: solid;
+			border-left-style: solid;
+			font-weight: bold;
+			color: black;
+			background-color: lightgrey;
+			width: 63.4%;
+		}
+		.times_div_css {
+			border-width: 2px;
+			border-color: black;
+			border-top-style: none;
+			border-right-style: none;
+			border-bottom-style: solid;
+			border-left-style: solid;
+			text-align: center;
+			vertical-align: middle;
+			width: 23.4%;
+		}
+	  
+		#popup {
+			top: 50%;
+			left: 50%;
+			min-width:50%;
+			min-height:50%;
+			justify-content: center;
+			align-items: center;
+			flex-wrap: no-wrap;
+			flex-direction: column;
+			-webkit-transform: translateX(-50%) translateY(-50%);
+			-moz-transform: translateX(-50%) translateY(-50%);
+			-ms-transform: translateX(-50%) translateY(-50%);
+			transform: translateX(-50%) translateY(-50%);
+		}
+	
+	</style>
+	<script>
+		class Location {
+			name;
+			team_members;
+			constructor(name) {
+				this.name = name;
+				this.team_members = [];
+			}
+		}
+		class TeamMember {
+			name;
+			eid;
+			location;
+			shift_in;
+			shift_out;
+			constructor(name, eid, location, shift_in, shift_out) {
+				this.name = name;
+				this.eid = eid;
+				this.location = location;
+				this.shift_in = shift_in;
+				this.shift_out = shift_out;
+			}
+		}
+		
+		var parkOpen = "NOT";
+		var parkClose = "OPEN";
+			
+		function getInputData(){
+			var input_text = document.getElementById("input_text_schedules").value;
+			var data_string = input_text.split('\n');
+			return data_string;
+		}
+		function getInputCompareData(){
+			var input_text = document.getElementById("input_text_compare").value;
+			var data_string = input_text.split('\n');
+			return data_string;
+		}
+		
+		function loadDataAPI(){
+		fetch("https://api.sixflags.net/mobileapi/v1/park/6/hours") // Call the fetch function passing the url of the API as a parameter
+		  .then(res => res.json())
+		  .then(function (res) {
+			console.log(res.operatingHours);
+			let currentDate = new Date().toJSON().slice(0, 10);
+			console.log(currentDate);
+			for(let i=0;i<res.operatingHours.length;i++){
+			var checkDate = res.operatingHours[i].operatingDate.slice(0, 10);
+			console.log(checkDate);
+				if(checkDate.includes(currentDate))
+				{
+					console.log("THIS DATE MATCHES");
+					parkOpen = res.operatingHours[i].open;
+					parkOpen = res.operatingHours[i].close;
+					return;
+				}
+			}
+			// Your code for handling the data you get from the API
+			console.log(parkOpen + " " + parkClose);
+		  })
+		  .catch(function() {
+			// This is where you run code if the server returns any errors
+		  });
+		  
+		}
+			
+		function tempFunct(){
+			
+			/*
+					[0]0000 - Ride name	[1]Position Data`[2]SEQ	[3]time	[4]name
+					0000 - Ride name	30001 - Attendant	1	9:20AM-3:30	666666 - Devil, Satan
+					0000 - Ride name	30001 - Attendant	1	9:20AM-3:30	666666 - Devil, Satan
+			*/
+			var staffing_sheet = document.getElementById('staffing_sheet');
+			var template = document.querySelector('template');
+			var team_members_data = getInputData();
+			var compare_data = getInputCompareData();
+			var last_location = "No Way Its Bob!";
+			var locations = [];
+			console.log(compare_data);
+				
+			for(let i=0;i<team_members_data.length;i++){
+				var temp_team_member_data = team_members_data[i].split('\t');
+					console.log(temp_team_member_data.length);
+				if(!temp_team_member_data[4]){
+					console.log("NOT ENOUGH DATA");
+					continue;
+				}
+				
+				var temp_location = temp_team_member_data[0];
+				var temp_position = temp_team_member_data[1];
+				var temp_seq = temp_team_member_data[2];
+				var temp_time = temp_team_member_data[3];
+				var temp_eid = temp_team_member_data[4].split(' - ')[0];
+				var temp_name = temp_team_member_data[4].split(' - ')[1];
+				var isCompared = false;
+				console.log(compare_data.length);
+				for(let k = 0; k<compare_data.length;k++)
+				{
+					if(compare_data[k].includes(temp_name))
+					{
+						isCompared=true;
+						console.log("HELLLLLLO  " + compare_data[k] + " " + temp_name);
+					}
+				}
+				
+				if(!isCompared){
+					continue;
+				}
+				
+				//If Location is one we havent seenbefore, create a new Location
+				if(!last_location.includes(temp_location)){
+					last_location = temp_location;
+					var new_location = new Location(last_location);
+					locations.push(new_location);
+					console.log("Create New Location: " + last_location);
+				}
+				
+				//Seperate and change time to military
+				temp_time = temp_time.replaceAll(':', '');
+				temp_time = temp_time.replaceAll(' ', '');
+				var shiftTimes = temp_time.split('-');
+				for(let j = 0; j<2; j++){
+					if(shiftTimes[j].includes("AM")){
+						shiftTimes[j] = shiftTimes[j].replace('AM',''); 
+						if(  parseInt(shiftTimes[j])>1159  ){
+							shiftTimes[j] = (parseInt(shiftTimes[j])-1200).toString();
+						if(  parseInt(shiftTimes[j])<60  ){
+							shiftTimes[j] = "0"+shiftTimes[j];
+							}
+						}				
+					}else if(  shiftTimes[j].includes("PM")      ){
+							shiftTimes[j] = shiftTimes[j].replace('PM','');
+						if(  (parseInt(shiftTimes[j])+2400)-1200<2400  ){
+							shiftTimes[j] = (parseInt(shiftTimes[j])+1200).toString();
+						}
+					}
+				}
+				var new_team_member = new TeamMember(temp_name, temp_eid, temp_location, shiftTimes[0], shiftTimes[1]);
+				console.log(new_team_member);
+				locations[locations.length-1].team_members.push(new_team_member);
+			}
+			
+		
+			const sidebar = document.getElementById('sidebar');
+			const main = document.getElementById('main');
+			main.innerHTML = "";
+			for(let i=0;i<locations.length;i++){
+				var text;
+				var location_button = document.createElement("button");
+				location_button.id = locations[i].name  + "_sidebar";;
+				location_button.textContent = locations[i].name
+				location_button.className = "button_sidebar";
+				location_button.checked = false;
+				
+				
+				location_button.addEventListener('click', function() {
+					var index = i;
+					var button = document.getElementById(locations[index].name + "_sidebar");
+					var main_location = document.getElementById(locations[index].name+ "_main");
+					button.checked = !button.checked;
+						if (button.checked) {
+							console.log("Checkbox is checked..");
+							button.className = "button_sidebar_select";
+							main_location.style.display  = "block";
+						} else {
+							console.log("Checkbox is not checked..");
+							button.className = "button_sidebar";
+							main_location.style.display  = "none";
+						}
+				});
+				
+				
+				sidebar.append(location_button);
+				var location_div = document.createElement("section");
+				location_div.id = locations[i].name + "_main";
+				location_div.className = "location_div_css";
+				location_div.style.display  = "none";
+				var location_name_div = document.createElement("section");
+				location_name_div.className = "location_name_div_css";
+				text = document.createTextNode(locations[i].name);
+				location_name_div.append(text);
+				location_div.append(location_name_div);
+				var shift_group_in = "9999";
+				locations[i].team_members.sort(function(a, b){return parseInt(a.shift_in) - parseInt(b.shift_in)});
+				var shift_groups_div = document.createElement("section");
+				shift_groups_div.className = "shift_groups_div_css";
+				for(let j=0;j<locations[i].team_members.length;j++){
+					var temp_team_member = locations[i].team_members[j];
+						var shift_group_div = document.createElement("section");
+						shift_group_div.className = "shift_group_div_css";
+					if(parseInt(shift_group_in) != parseInt(temp_team_member.shift_in)){
+						shift_group_in = (temp_team_member.shift_in === "00")?"0000":temp_team_member.shift_in;
+						console.log("Start New Group: " + shift_group_in);
+						var shift_in_header_div = document.createElement("section");
+						shift_in_header_div.className = "shift_in_header_div_css";
+						text = document.createTextNode(shift_group_in);
+						shift_in_header_div.append(text);
+						shift_groups_div.append(shift_in_header_div);
+					}
+					console.log("\t"+temp_team_member.name+ "\t" + temp_team_member.eid + "\t(" + temp_team_member.shift_in+ "-"+ temp_team_member.shift_out+")");
+					
+					var team_member_div = document.createElement("section");
+					team_member_div.id = temp_team_member.eid;
+					team_member_div.className = (false/*temp_team_member.name.includes("(16-17)")*/)?"team_member_div_minor_css":"team_member_div_css";
+					/*
+					text = document.createTextNode(temp_team_member.eid+ "\t" + temp_team_member.name + "\t(" + temp_team_member.shift_in+ "-"+ temp_team_member.shift_out+")");
+					team_member_div.append(text);
+					*/
+					
+					var times_div = document.createElement("div");
+					times_div.className = "times_div_css";
+					text = document.createTextNode("\t[" + temp_team_member.shift_in+ "-"+ temp_team_member.shift_out+"]");
+					times_div.append(text);
+					team_member_div.append(times_div);
+					var eid_div = document.createElement("div");
+					eid_div.className = "eid_div_css";
+					text = document.createTextNode("\t" + temp_team_member.eid);
+					eid_div.append(text);
+					team_member_div.append(eid_div);
+					var name_div = document.createElement("div");
+					name_div.className = (temp_team_member.name.includes("(16-17)"))?"name_minor_div_css":"name_div_css";
+					//temp_team_member.name=temp_team_member.name.replace("(16-17)","");
+					text = document.createTextNode("\t" + temp_team_member.name);
+					name_div.append(text);
+					team_member_div.append(name_div);
+					team_member_div.checked = false;
+					
+					name_div.addEventListener('click', function(e) {
+					console.log(e.srcElement.className);
+					var button = e.srcElement;
+					button.checked = !button.checked;
+					console.log(button.className);
+					console.log(e.srcElement);
+					
+					
+						if (button.checked) {
+							if(button.className.includes("minor")) {
+							button.className = "name_minor_lead_div_css";
+							}else{
+							button.className = "name_lead_div_css";
+							}
+							//button.className = "name_lead_div_css";
+							console.log("Checkbox is checked..");
+						} else {
+							if(button.className.includes("minor")){
+							button.className = "name_minor_div_css";
+							}else{
+							button.className = "name_div_css";
+							}
+							console.log("Checkbox is not checked..");
+						}
+					});
+					
+					
+					shift_groups_div.append(team_member_div);
+					
+					//shift_groups_div.append(shift_group_div);
+				}
+				location_div.append(shift_groups_div);
+				main.append(location_div);
+			}
+			
+		//Close the Popup
+		const popup_object = document.getElementById('popup');
+			popup_object.style.display  = "none";
+		}
+		
+		function testInput(e){
+			console.log(e);
+		}
+			
+		function openPasteDataDialog(){
+		const popup_object = document.getElementById('popup');
+			popup_object.style.display  = "flex";
+		}
+		function closePasteDataPopup(){
+		const popup_object = document.getElementById('popup');
+			popup_object.style.display  = "none";
+		}
+	</script>
+	<head>
+	
+	</head>
+	<body onload="loadDataAPI()">
+		<nav>
+			<a href="#" onClick="openPasteDataDialog()">Paste Data</a>
+			
+			<a href="https://www.w3schools.com">Clear Data</a>
+			<a href="#" onClick="window.print()">Print</a>
+		</nav>
+		<aside id="sidebar">
+			<h2>LOCATIONS:</h2>
+		</aside>
+		<main id="main">
+			<h1>Hello World</h1>
+			<p>Things will go here</p>
+			
+		<input type="file" id="ctrl" onchange="testInput(e)"  webkitfileentry fileentry multiple/>
+		</main>
+		<footer id="footer">
+			Footer
+		</footer>
+		
+		<dialog id="popup">
+			<h1>Paste Data Here:</h1>
+			<textarea id="input_text_schedules" class="input_text_css" style="width: 80%; min-height: 50%;"></textarea>
+			<section>
+				<button onClick="tempFunct()">CREATE</button>
+				<button onClick="closePasteDataPopup()">CANCEL</button>
+			</section>
+			<textarea id="input_text_compare_reason" class="input_text_css" style="width: 80%; min-height: 10%;"></textarea>
+			<textarea id="input_text_compare" class="input_text_css" style="width: 80%; min-height: 50%;"></textarea>
+		</dialog>
+	</body>
+</html>
