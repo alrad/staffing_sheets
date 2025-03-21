@@ -254,12 +254,14 @@
 		class TeamMember {
 			name;
 			eid;
+			position;
 			location;
 			shift_in;
 			shift_out;
-			constructor(name, eid, location, shift_in, shift_out) {
+			constructor(name, eid, position, location, shift_in, shift_out) {
 				this.name = name;
 				this.eid = eid;
+				this.position = position;
 				this.location = location;
 				this.shift_in = shift_in;
 				this.shift_out = shift_out;
@@ -271,11 +273,6 @@
 			
 		function getInputData(){
 			var input_text = document.getElementById("input_text_schedules").value;
-			var data_string = input_text.split('\n');
-			return data_string;
-		}
-		function getInputCompareData(){
-			var input_text = document.getElementById("input_text_compare").value;
 			var data_string = input_text.split('\n');
 			return data_string;
 		}
@@ -317,10 +314,8 @@
 			var staffing_sheet = document.getElementById('staffing_sheet');
 			var template = document.querySelector('template');
 			var team_members_data = getInputData();
-			var compare_data = getInputCompareData();
 			var last_location = "No Way Its Bob!";
 			var locations = [];
-			console.log(compare_data);
 				
 			for(let i=0;i<team_members_data.length;i++){
 				var temp_team_member_data = team_members_data[i].split('\t');
@@ -365,7 +360,7 @@
 						}
 					}
 				}
-				var new_team_member = new TeamMember(temp_name, temp_eid, temp_location, shiftTimes[0], shiftTimes[1]);
+				var new_team_member = new TeamMember(temp_name, temp_eid, temp_position, temp_location, shiftTimes[0], shiftTimes[1]);
 				console.log(new_team_member);
 				locations[locations.length-1].team_members.push(new_team_member);
 			}
@@ -427,7 +422,7 @@
 						shift_in_header_div.append(text);
 						shift_groups_div.append(shift_in_header_div);
 					}
-					console.log("\t"+temp_team_member.name+ "\t" + temp_team_member.eid + "\t(" + temp_team_member.shift_in+ "-"+ temp_team_member.shift_out+")");
+					console.log("\t"+temp_team_member.name+ "\t" + temp_team_member.eid + "\t" + temp_team_member.position + "\t(" + temp_team_member.shift_in+ "-"+ temp_team_member.shift_out+")");
 					
 					var team_member_div = document.createElement("section");
 					team_member_div.id = temp_team_member.eid;
@@ -448,12 +443,30 @@
 					eid_div.append(text);
 					team_member_div.append(eid_div);
 					var name_div = document.createElement("div");
-					name_div.className = (temp_team_member.name.includes("(16-17)"))?"name_minor_div_css":"name_div_css";
+					if(temp_team_member.position.includes("Lead")){
+						if(temp_team_member.name.includes("(16-17)"))
+						{
+							name_div.className = "name_minor_lead_div_css";
+						}else{
+							name_div.className = "name_lead_div_css";
+						}
+					}else{
+						if(temp_team_member.name.includes("(16-17)"))
+						{
+							name_div.className = "name_minor_div_css";
+						}else{
+							name_div.className = "name_div_css";
+						}
+					}
+					
+					
+					
+					console.log(temp_team_member.position);
 					//temp_team_member.name=temp_team_member.name.replace("(16-17)","");
 					text = document.createTextNode("\t" + temp_team_member.name);
 					name_div.append(text);
 					team_member_div.append(name_div);
-					team_member_div.checked = false;
+					team_member_div.checked = temp_team_member.position.includes("Lead");
 					
 					name_div.addEventListener('click', function(e) {
 					console.log(e.srcElement.className);
