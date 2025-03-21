@@ -10,12 +10,13 @@
 			  visibility: hidden;
 			}
 			#main {
-			  -webkit-print-color-adjust: exact;
-			  visibility: visible;
-			  position: absolute;
-			  left: 0;
-			  top: 0;
-			  width: 100%;
+				-webkit-print-color-adjust: exact;
+				visibility: visible;
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 80%;
+				background-color: white;
 			}
 		}
 		body {
@@ -89,6 +90,12 @@
 		main {
 			grid-area: main;
 			background-color: grey;
+			
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+			width:100%;
 		}
 		footer {
 			grid-area: footer;
@@ -97,61 +104,126 @@
 			padding: 2em;
 		}
 		.location_div_css{
-			width:100%;
+			width:90%;
 			background-color: white;
 		}
 	  
 		.location_name_div_css{
-			width:100%;
+			text-align: center;
+			vertical-align: middle;
+			width: 100%;
 			color: white;
-			background-color: black;
-		}
-	  
-		.shift_in_header_div_css{
-			width:100%;
+			/*
+			border-style: solid ;
+			border-width: 2px;
+			border-color: black;
+			*/
 			background-color: grey;
 		}
 	  
+		.shift_in_header_div_css{
+			text-align: center;
+			vertical-align: middle;
+			color: white;
+			width:100%;
+			/*
+			border-style: solid ;
+			border-width: 2px;
+			border-color: grey;
+			*/
+			background-color: darkgrey;
+		}
+	  
 		.shift_groups_div_css{
-			min-width: 100%;
+			width: 100%;
 			display: flex;
-			justify-content: start;
+			justify-content: center;
 			align-items: start;
-			flex-wrap: wrap;
+			flex-direction: column;
 			//flex-direction: column;
 			//padding: 0.1em;
 		}
 		
 		.shift_group_div_css{
 			color: white;
-			padding: 5px 5px;
+			padding: 1% 1%;
 		}
 		
 		.team_member_div_css {
+			display: flex;
+			justify-content: start;
+			align-items: start;
+			width: 100%;
 			color: black;
 			font-weight: normal;
-			background-color: #ccc;
+			background-color: white;
 		}
-		.team_member_div_bold_css {
-			color: black;
+		.eid_div_css {
+			border-width: 2px;
+			border-color: black;
+			border-top-style: none;
+			border-right-style: none;
+			border-bottom-style: solid;
+			border-left-style: solid;
+			text-align: center;
+			vertical-align: middle;
+			width: 13.4%;
+		}
+		.name_div_css {
+			border-width: 2px;
+			border-color: black;
+			border-top-style: none;
+			border-right-style: solid;
+			border-bottom-style: solid;
+			border-left-style: solid;
+			font-weight: normal;
+			background-color: white;
+			width: 63.4%;
+		}
+		.name_lead_div_css {
+			border-width: 2px;
+			border-color: black;
+			border-top-style: none;
+			border-right-style: solid;
+			border-bottom-style: solid;
+			border-left-style: solid;
 			font-weight: bold;
-			background-color: #ccc;
+			background-color: white;
+			width: 63.4%;
 		}
-		.team_member_div_css:nth-of-type(odd){
-			color: black;
-			background-color: cornsilk;
+		.name_minor_div_css {
+			border-width: 2px;
+			border-color: black;
+			border-top-style: none;
+			border-right-style: solid;
+			border-bottom-style: solid;
+			border-left-style: solid;
+			font-weight: normal;
+			background-color: lightgrey;
+			width: 63.4%;
 		}
-		.team_member_div_bold_css:nth-of-type(odd) {
-			color: black;
+		.name_minor_lead_div_css {
+			border-width: 2px;
+			border-color: black;
+			border-top-style: none;
+			border-right-style: solid;
+			border-bottom-style: solid;
+			border-left-style: solid;
 			font-weight: bold;
-			background-color: cornsilk;
+			color: black;
+			background-color: lightgrey;
+			width: 63.4%;
 		}
-		
-		
-		.team_member_div_minor_css {
-			background-color: orange;
-			//color: black;
-			//background: repeating-linear-gradient( -45deg, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 5px, lightgrey 6px, rgba(0,0,0,0) 11px, rgba(0,0,0,0) 12px);
+		.times_div_css {
+			border-width: 2px;
+			border-color: black;
+			border-top-style: none;
+			border-right-style: none;
+			border-bottom-style: solid;
+			border-left-style: solid;
+			text-align: center;
+			vertical-align: middle;
+			width: 23.4%;
 		}
 	  
 		#popup {
@@ -202,6 +274,11 @@
 			var data_string = input_text.split('\n');
 			return data_string;
 		}
+		function getInputCompareData(){
+			var input_text = document.getElementById("input_text_compare").value;
+			var data_string = input_text.split('\n');
+			return data_string;
+		}
 		
 		function loadDataAPI(){
 		fetch("https://api.sixflags.net/mobileapi/v1/park/6/hours") // Call the fetch function passing the url of the API as a parameter
@@ -240,8 +317,10 @@
 			var staffing_sheet = document.getElementById('staffing_sheet');
 			var template = document.querySelector('template');
 			var team_members_data = getInputData();
+			var compare_data = getInputCompareData();
 			var last_location = "No Way Its Bob!";
 			var locations = [];
+			console.log(compare_data);
 				
 			for(let i=0;i<team_members_data.length;i++){
 				var temp_team_member_data = team_members_data[i].split('\t');
@@ -250,12 +329,14 @@
 					console.log("NOT ENOUGH DATA");
 					continue;
 				}
+				
 				var temp_location = temp_team_member_data[0];
 				var temp_position = temp_team_member_data[1];
 				var temp_seq = temp_team_member_data[2];
 				var temp_time = temp_team_member_data[3];
 				var temp_eid = temp_team_member_data[4].split(' - ')[0];
 				var temp_name = temp_team_member_data[4].split(' - ')[1];
+				
 				//If Location is one we havent seenbefore, create a new Location
 				if(!last_location.includes(temp_location)){
 					last_location = temp_location;
@@ -335,46 +416,75 @@
 				shift_groups_div.className = "shift_groups_div_css";
 				for(let j=0;j<locations[i].team_members.length;j++){
 					var temp_team_member = locations[i].team_members[j];
+						var shift_group_div = document.createElement("section");
+						shift_group_div.className = "shift_group_div_css";
 					if(parseInt(shift_group_in) != parseInt(temp_team_member.shift_in)){
 						shift_group_in = (temp_team_member.shift_in === "00")?"0000":temp_team_member.shift_in;
 						console.log("Start New Group: " + shift_group_in);
-						var shift_group_div = document.createElement("section");
-						shift_group_div.className = "shift_group_div_css";
 						var shift_in_header_div = document.createElement("section");
 						shift_in_header_div.className = "shift_in_header_div_css";
 						text = document.createTextNode(shift_group_in);
 						shift_in_header_div.append(text);
-						shift_group_div.append(shift_in_header_div);
+						shift_groups_div.append(shift_in_header_div);
 					}
-					console.log("\t"+temp_team_member.name+ "\t" + temp_team_member.eid + "\t(" + temp_team_member.shift_out+")");
+					console.log("\t"+temp_team_member.name+ "\t" + temp_team_member.eid + "\t(" + temp_team_member.shift_in+ "-"+ temp_team_member.shift_out+")");
 					
 					var team_member_div = document.createElement("section");
 					team_member_div.id = temp_team_member.eid;
 					team_member_div.className = (false/*temp_team_member.name.includes("(16-17)")*/)?"team_member_div_minor_css":"team_member_div_css";
-					//temp_team_member.name=temp_team_member.name.replace("(16-17)","(m)");
-					text = document.createTextNode(temp_team_member.name+ "\t" + temp_team_member.eid + "\t(" + temp_team_member.shift_out+")");
+					/*
+					text = document.createTextNode(temp_team_member.eid+ "\t" + temp_team_member.name + "\t(" + temp_team_member.shift_in+ "-"+ temp_team_member.shift_out+")");
 					team_member_div.append(text);
+					*/
 					
+					var times_div = document.createElement("div");
+					times_div.className = "times_div_css";
+					text = document.createTextNode("\t[" + temp_team_member.shift_in+ "-"+ temp_team_member.shift_out+"]");
+					times_div.append(text);
+					team_member_div.append(times_div);
+					var eid_div = document.createElement("div");
+					eid_div.className = "eid_div_css";
+					text = document.createTextNode("\t" + temp_team_member.eid);
+					eid_div.append(text);
+					team_member_div.append(eid_div);
+					var name_div = document.createElement("div");
+					name_div.className = (temp_team_member.name.includes("(16-17)"))?"name_minor_div_css":"name_div_css";
+					//temp_team_member.name=temp_team_member.name.replace("(16-17)","");
+					text = document.createTextNode("\t" + temp_team_member.name);
+					name_div.append(text);
+					team_member_div.append(name_div);
 					team_member_div.checked = false;
 					
-					team_member_div.addEventListener('click', function(e) {
+					name_div.addEventListener('click', function(e) {
 					console.log(e.srcElement.className);
 					var button = e.srcElement;
 					button.checked = !button.checked;
 					console.log(button.className);
+					console.log(e.srcElement);
+					
+					
 						if (button.checked) {
-							button.className = "team_member_div_bold_css";
+							if(button.className.includes("minor")) {
+							button.className = "name_minor_lead_div_css";
+							}else{
+							button.className = "name_lead_div_css";
+							}
+							//button.className = "name_lead_div_css";
 							console.log("Checkbox is checked..");
 						} else {
-							button.className = "team_member_div_css";
+							if(button.className.includes("minor")){
+							button.className = "name_minor_div_css";
+							}else{
+							button.className = "name_div_css";
+							}
 							console.log("Checkbox is not checked..");
 						}
 					});
 					
 					
-					shift_group_div.append(team_member_div);
+					shift_groups_div.append(team_member_div);
 					
-					shift_groups_div.append(shift_group_div);
+					//shift_groups_div.append(shift_group_div);
 				}
 				location_div.append(shift_groups_div);
 				main.append(location_div);
@@ -383,6 +493,10 @@
 		//Close the Popup
 		const popup_object = document.getElementById('popup');
 			popup_object.style.display  = "none";
+		}
+		
+		function testInput(e){
+			console.log(e);
 		}
 			
 		function openPasteDataDialog(){
@@ -410,6 +524,8 @@
 		<main id="main">
 			<h1>Hello World</h1>
 			<p>Things will go here</p>
+			
+		<input type="file" id="ctrl" onchange="testInput(e)"  webkitfileentry fileentry multiple/>
 		</main>
 		<footer id="footer">
 			Footer
@@ -422,6 +538,8 @@
 				<button onClick="tempFunct()">CREATE</button>
 				<button onClick="closePasteDataPopup()">CANCEL</button>
 			</section>
+			<textarea id="input_text_compare_reason" class="input_text_css" style="width: 80%; min-height: 10%;"></textarea>
+			<textarea id="input_text_compare" class="input_text_css" style="width: 80%; min-height: 50%;"></textarea>
 		</dialog>
 	</body>
 </html>
