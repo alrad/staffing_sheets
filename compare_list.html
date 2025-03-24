@@ -374,7 +374,8 @@
 				console.log(compare_data.length);
 				for(let k = 0; k<compare_data.length;k++)
 				{
-					if(compare_data[k].includes(temp_name))
+					console.log("Checking if " + temp_name + " is on list");
+					if(compare_data[k].includes(temp_eid))
 					{
 						isCompared=true;
 						console.log("HELLLLLLO  " + compare_data[k] + " " + temp_name);
